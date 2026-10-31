@@ -1,29 +1,34 @@
-# HUIT Graduation Invitation – Netlify Admin & Public
+# HUIT Invitation – Link riêng có lưu trên Netlify
 
-## Cách triển khai khuyên dùng (không cần VPS)
-1. Đăng nhập GitHub (https://github.com), tạo một **repository private** mới.
-2. Tải toàn bộ file trong thư mục dự án này lên repository (đừng chỉ tải `site/`; phải có `netlify/`, `netlify.toml`, `package.json`).
-3. Truy cập https://app.netlify.com/start, đăng nhập Netlify, chọn **Import from Git** -> GitHub -> repository vừa tạo.
-4. Netlify sẽ nhận `netlify.toml`: Publish directory `site`, Functions `netlify/functions`; **không cần build command**. Bấm Deploy.
-5. Vào **Project configuration → Environment variables**, thêm biến **`HUIT_ADMIN_PASSWORD`** với mật khẩu tự đặt ít nhất 12 ký tự. Mật khẩu này không có sẵn trong source và KHÔNG đưa lên GitHub. Sau khi thêm, trigger redeploy ở Netlify nếu được yêu cầu.
-6. Vào trang `https://ten-site.netlify.app/admin`, điền mật khẩu và chỉnh cấu hình. Bấm **Lưu thay đổi lên website**.
-7. Khách dùng `https://ten-site.netlify.app/?to=Nguyen%20Van%20A`; phần Public tự đọc cấu hình mới qua Netlify Functions + Blobs.
+## Deploy cập nhật website đang dùng
+1. Giữ lại đúng **website Netlify** đang dùng, KHÔNG cần tạo site mới và KHÔNG cần đổi mật khẩu.
+2. Giải nén ZIP, ghi đè toàn bộ source vào **repository GitHub đang nối Netlify** (gồm `site/`, `netlify/`, `netlify.toml`, `package.json`).
+3. Commit/push, chờ Netlify **Published**. Bấm Ctrl+F5 khi mở `/admin`.
+4. Nhập `HUIT_ADMIN_PASSWORD` đã đặt trên Netlify. Không đưa mật khẩu vào repository.
 
-Nếu chỉ muốn đăng thiệp tĩnh, có thể kéo thư mục `site/` vào https://app.netlify.com/drop nhưng **không có API Admin**, không thể đồng bộ nhạc/nội dung. Vì bạn muốn Admin lưu thay đổi trực tiếp, dùng **Import from Git** như trên.
+## Tạo và lưu link dành cho một khách
+1. Mở `https://ten-site.netlify.app/admin`.
+2. Nhập mật khẩu, thông tin lễ, tên người nhận và cách xưng hô; chọn MP3 riêng (nếu muốn).
+3. Bấm **Lưu thiệp & lấy link riêng**.
+4. Trang Admin hiện link dạng `https://ten-site.netlify.app/i/5e...` để sao chép.
+5. Link đã được lưu trong **Netlify Blobs**, không cần export file hay deploy lần nữa. Khách có thể mở link ngay.
+6. Sử dụng **Danh sách thiệp đã lưu** để mở/sửa/xóa; sửa link có sẵn **không đổi URL**. Bấm **Tạo thiệp mới** để tạo link cho người tiếp theo.
+7. Muốn lưu nhiều link một lượt, nhập mỗi tên một dòng tại **Lưu nhiều thiệp cùng lúc**, bấm **Lưu tất cả & tạo link**; tải CSV nếu cần.
 
-## Chức năng
-- Public: giữ toàn bộ thiết kế HUIT, cổng line-art, binary rain, confetti, phong bì, VR360, cá nhân hóa `?to=` và `?role=`.
-- Admin: sửa tên sinh viên, tên người nhận mặc định, xưng hô, năm, thời gian, địa điểm, Google Maps; link riêng hàng loạt/CSV.
-- Nhạc: mặc định nhạc piano đã nhúng trong HTML, hoặc upload MP3 (tối đa 3 MB), link MP3 HTTPS, tắt nhạc. MP3 lưu ở Netlify Blobs.
-- API write được kiểm tra mật khẩu ở Netlify Functions. Link `/admin` có thể mở công khai nhưng **không có mật khẩu thì không thể lưu hay upload nhạc**.
+## Hành vi quan trọng
+- Thiệp cá nhân lưu **bản sao** của thông tin sự kiện, tên khách và cài đặt nhạc tại thời điểm lưu. Thay đổi cấu hình chung ở trang `/` không tự sửa các thiệp riêng đã gửi.
+- Link `/i/<id>` lưu riêng trên Netlify; không thể bị đổi tên chỉ bằng thêm `?to=`.
+- Nhạc MP3 đã tải lên từ Admin phiên bản này được lưu thành từng tệp riêng trong Netlify Blobs (`songs/<asset-id>.mp3`), không ghi đè bài hát đã dùng cho thiệp khác. Tối đa **15 MB**, tải theo phần 2 MB.
+- File MP3 đã tải lên phiên bản cũ (trong `background.mp3`) vẫn nghe được, trừ khi sau đó ghi đè bằng một phiên bản cũ hơn. Sửa/xóa thiệp không tự xóa MP3 dùng chung để tránh làm hỏng các link khác.
+- Link `/?to=Ten` của các thiệp đời cũ vẫn hoạt động, nhưng **chỉ link `/i/<id>` mới lưu được riêng**.
+- Sau khi lưu, link tồn tại trên website đang deploy, không phụ thuộc máy tính Admin. Hãy luôn dùng cùng một Netlify site, tránh tạo site mới sẽ dùng một kho lưu trữ khác.
+- Không chia sẻ URL Admin hay mật khẩu; link thiệp cá nhân là URL dài khó đoán chứ **không phải trang đăng nhập bảo mật**. Ai có link đều có thể xem thiệp.
+- Netlify Functions/Blobs có thể có chi phí hoặc giới hạn gói. Link có thể lỗi khi Netlify không hoạt động.
+- Các URL và lời mời phải sử dụng đúng thông tin sự kiện thực tế trước khi phát hành.
 
-## Lưu ý
-- URL `?to=...` **ưu tiên** tên riêng và ghi đè tên người nhận mặc định. Tên đã gửi trong URL không thể đổi chung từ Admin nếu bạn không phát link mới.
-- Không cần tạo lại `index.html` khi sửa nội dung. Khách tải lại trang để nhận thay đổi.
-- Netlify Functions & Blobs phụ thuộc Internet. Chưa có môi trường tài khoản Netlify của bạn nên dự án chưa được deploy thực tế.
-- Kích thước file MP3 tối đa 3 MB do giới hạn upload/response Functions; không upload nhạc có bản quyền nếu không có quyền sử dụng.
-- Nếu mở thẳng `index.html` từ máy, sẽ dùng giá trị dự phòng và không có tính năng lưu Admin.
-- Lịch lễ và địa điểm là thông tin mẫu, cần chỉnh chính xác theo thư mời chính thức trước khi chia sẻ.
-- Link nhạc ngoài cần CORS/phát trực tiếp, HTTPS. VR360 có thể bị chặn iframe bởi trang cung cấp.
-- Một mật khẩu chung phù hợp website cá nhân; nếu triển khai cho nhiều người quản trị, nên dùng xác thực tài khoản chuyên dụng.
-- Tránh chạy Deploy Preview cùng production với cùng kho Blobs khi đang sửa nội dung, vì dữ liệu site-wide dùng chung.
+## Kiểm thử sau deploy
+- Lưu `Nguyễn Văn A` → link `/i/<id-A>` hiện tên A.
+- Tạo thiệp mới, lưu `Trần Thị B` → link `/i/<id-B>` khác link A.
+- Mở lại link A → vẫn hiện A.
+- Chọn Sửa thiệp A, đổi thành `Nguyễn Văn C`, Lưu → vẫn là id-A nhưng hiện C.
+- Thử xóa thiệp A → link A hiện thông báo không tồn tại/đã thu hồi.

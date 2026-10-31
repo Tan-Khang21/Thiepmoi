@@ -8,7 +8,7 @@ export const DEFAULTS = {
   address:'140 Lê Trọng Tấn, Phường Tây Thạnh, TP. Hồ Chí Minh',
   mapQuery:'Trường Đại học Công Thương TP. Hồ Chí Minh, 140 Lê Trọng Tấn, Phường Tây Thạnh, TP. Hồ Chí Minh',
   recipientName:'', recipientRole:'', musicVolume:0.22, musicEnabled:true,
-  musicSource:'default', musicUrl:'', musicVersion:''
+  musicSource:'default', musicUrl:'', musicVersion:'', musicAsset:''
 };
 export const JSON_HEADERS={ 'Content-Type':'application/json; charset=utf-8', 'Cache-Control':'no-store', 'X-Content-Type-Options':'nosniff' };
 export const send=(data,status=200)=>new Response(JSON.stringify(data),{status,headers:JSON_HEADERS});
@@ -44,5 +44,10 @@ export function sanitize(input,current=DEFAULTS){
   if('musicEnabled' in input)result.musicEnabled=Boolean(input.musicEnabled);
   result.musicEnabled=result.musicSource!=='off';
   if('musicVersion' in input){result.musicVersion=String(input.musicVersion||'').slice(0,36).replace(/[^a-zA-Z0-9_-]/g,'');}
+  if('musicAsset' in input){
+    const asset=String(input.musicAsset||'');
+    if(asset && !/^[a-f0-9]{32}$/.test(asset)) throw Error('Mã nhạc không hợp lệ.');
+    result.musicAsset=asset;
+  }
   return result;
 }

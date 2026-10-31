@@ -20,3 +20,15 @@
   for = "/"
   [headers.values]
     Cache-Control = "no-cache"
+
+# Each stored invitation has a permanent private-looking link, e.g. /i/32-char-id
+[[redirects]]
+  from = "/i/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/i/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
