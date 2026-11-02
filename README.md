@@ -1,34 +1,38 @@
-# HUIT Invitation – Link riêng có lưu trên Netlify
+# HUIT Invitation – Cinematic 3D (V25)
 
-## Deploy cập nhật website đang dùng
-1. Giữ lại đúng **website Netlify** đang dùng, KHÔNG cần tạo site mới và KHÔNG cần đổi mật khẩu.
-2. Giải nén ZIP, ghi đè toàn bộ source vào **repository GitHub đang nối Netlify** (gồm `site/`, `netlify/`, `netlify.toml`, `package.json`).
-3. Commit/push, chờ Netlify **Published**. Bấm Ctrl+F5 khi mở `/admin`.
-4. Nhập `HUIT_ADMIN_PASSWORD` đã đặt trên Netlify. Không đưa mật khẩu vào repository.
+Phiên bản này cập nhật trực tiếp từ **V24: Admin + Public + link riêng từng khách + nhạc MP3 tối đa 15 MB**. Không thay đổi cấu trúc dữ liệu, API hoặc Netlify Functions.
 
-## Tạo và lưu link dành cho một khách
-1. Mở `https://ten-site.netlify.app/admin`.
-2. Nhập mật khẩu, thông tin lễ, tên người nhận và cách xưng hô; chọn MP3 riêng (nếu muốn).
-3. Bấm **Lưu thiệp & lấy link riêng**.
-4. Trang Admin hiện link dạng `https://ten-site.netlify.app/i/5e...` để sao chép.
-5. Link đã được lưu trong **Netlify Blobs**, không cần export file hay deploy lần nữa. Khách có thể mở link ngay.
-6. Sử dụng **Danh sách thiệp đã lưu** để mở/sửa/xóa; sửa link có sẵn **không đổi URL**. Bấm **Tạo thiệp mới** để tạo link cho người tiếp theo.
-7. Muốn lưu nhiều link một lượt, nhập mỗi tên một dòng tại **Lưu nhiều thiệp cùng lúc**, bấm **Lưu tất cả & tạo link**; tải CSV nếu cần.
+## Hiệu ứng mới
 
-## Hành vi quan trọng
-- Thiệp cá nhân lưu **bản sao** của thông tin sự kiện, tên khách và cài đặt nhạc tại thời điểm lưu. Thay đổi cấu hình chung ở trang `/` không tự sửa các thiệp riêng đã gửi.
-- Link `/i/<id>` lưu riêng trên Netlify; không thể bị đổi tên chỉ bằng thêm `?to=`.
-- Nhạc MP3 đã tải lên từ Admin phiên bản này được lưu thành từng tệp riêng trong Netlify Blobs (`songs/<asset-id>.mp3`), không ghi đè bài hát đã dùng cho thiệp khác. Tối đa **15 MB**, tải theo phần 2 MB.
-- File MP3 đã tải lên phiên bản cũ (trong `background.mp3`) vẫn nghe được, trừ khi sau đó ghi đè bằng một phiên bản cũ hơn. Sửa/xóa thiệp không tự xóa MP3 dùng chung để tránh làm hỏng các link khác.
-- Link `/?to=Ten` của các thiệp đời cũ vẫn hoạt động, nhưng **chỉ link `/i/<id>` mới lưu được riêng**.
-- Sau khi lưu, link tồn tại trên website đang deploy, không phụ thuộc máy tính Admin. Hãy luôn dùng cùng một Netlify site, tránh tạo site mới sẽ dùng một kho lưu trữ khác.
-- Không chia sẻ URL Admin hay mật khẩu; link thiệp cá nhân là URL dài khó đoán chứ **không phải trang đăng nhập bảo mật**. Ai có link đều có thể xem thiệp.
-- Netlify Functions/Blobs có thể có chi phí hoặc giới hạn gói. Link có thể lỗi khi Netlify không hoạt động.
-- Các URL và lời mời phải sử dụng đúng thông tin sự kiện thực tế trước khi phát hành.
+- **Phong bì 3D:** nghiêng nhẹ theo vị trí con trỏ trên desktop; ánh sáng và bóng đổ phản ứng theo góc nhìn.
+- **Mở phong bì theo trình tự:** dấu HUIT phát sáng → nắp thư lật 3D → ánh sáng xuất hiện từ bên trong → lá thư trượt lên.
+- **Camera tiến nhẹ về phía cổng HUIT:** phần mái, hai trụ và nét phối cảnh chuyển động với tốc độ/độ dịch chuyển khác nhau; tiêu đề dịu đi trong lúc lá thư bay lên, rồi hiện thiệp.
+- **Đóng thư:** khi đóng thiệp, lá thư thu về trước, nắp thư đóng sau, dấu niêm phong trở lại.
+- **Mobile & Accessibility:** giảm biên độ zoom trên điện thoại; không yêu cầu con trỏ; tôn trọng cài đặt `prefers-reduced-motion`.
 
-## Kiểm thử sau deploy
-- Lưu `Nguyễn Văn A` → link `/i/<id-A>` hiện tên A.
-- Tạo thiệp mới, lưu `Trần Thị B` → link `/i/<id-B>` khác link A.
-- Mở lại link A → vẫn hiện A.
-- Chọn Sửa thiệp A, đổi thành `Nguyễn Văn C`, Lưu → vẫn là id-A nhưng hiện C.
-- Thử xóa thiệp A → link A hiện thông báo không tồn tại/đã thu hồi.
+## Deploy lên website Netlify hiện tại
+
+1. Giải nén gói ZIP tại **thư mục gốc repository** GitHub đã kết nối Netlify; ghi đè các file cũ.
+2. Giữ nguyên **site Netlify**, biến môi trường `HUIT_ADMIN_PASSWORD`, các dữ liệu và link thiệp đã lưu.
+3. Commit và push lên GitHub. Netlify deploy tự động; đợi trạng thái **Published**.
+4. Mở lại trang Public và `/admin` (bấm Ctrl+F5 nếu trình duyệt đang lưu cache).
+
+**Không cần tạo lại link thiệp.** Các đường dẫn `/i/<mã-thiệp>` vẫn sử dụng Netlify Blobs hiện tại.
+
+## Cách sử dụng
+
+- Trên trang Public, đưa chuột lên phong bì để thấy hiệu ứng nghiêng nhẹ; bấm vào phong bì để mở thiệp.
+- Khi mở, camera tiến nhẹ về cổng trường. Nội dung và nhạc riêng của mỗi khách vẫn được tải từ cấu hình đã lưu.
+- Bấm dấu **×** để đóng thiệp và xem phong bì khép lại.
+- Quản lý nội dung, nhạc, tạo / sửa / xóa link riêng ở `/admin` như bản V24.
+
+## Các tập tin chính
+
+- `site/index.html`: trang Public và hiệu ứng mở thiệp.
+- `site/admin.html`, `site/admin.js`: quản trị thiệp.
+- `netlify/functions/`: lưu cấu hình, nhạc và link riêng.
+- `netlify.toml`, `package.json`: cấu hình Netlify.
+
+## Lưu ý
+
+Website Public có thể xem thử khi mở `site/index.html`, nhưng tính năng lưu dữ liệu, link riêng và nhạc online cần Netlify Functions/Blobs. Bản này được kiểm tra cú pháp JavaScript và luồng mở/đóng trên Chromium ở kích thước desktop và mobile trong môi trường thử nghiệm; bạn nên thử lại sau khi deploy để xác nhận cấu hình Netlify thực tế.

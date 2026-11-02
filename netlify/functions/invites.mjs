@@ -24,6 +24,9 @@ export default async function handler(request){
       if(requestedId && !existing)return reject('Thiệp đã bị xóa hoặc không tồn tại.',404);
       const settings=sanitize(body.settings,await getSettings());
       if(!settings.recipientName.trim())return reject('Hãy nhập tên người nhận để tạo link riêng.');
+      const greetingOnly=new Set(['than moi','than moi ban','kinh moi','kinh moi ban','tran trong kinh moi','ban than moi','kinh moi anh chi','kinh moi thay co']);
+      const normalized=settings.recipientName.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/đ/g,'d').replace(/[^a-z ]/g,' ').replace(/\s+/g,' ').trim();
+      if(greetingOnly.has(normalized))return reject('Đây là lời chào, không phải tên người nhận. Hãy nhập tên khách thật.');
       const id=requestedId || randomBytes(16).toString('hex');
       const now=new Date().toISOString();
       const invite={id,settings,createdAt:existing?.createdAt||now,updatedAt:now};
