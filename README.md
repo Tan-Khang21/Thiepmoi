@@ -1,5 +1,15 @@
 # HUIT Invitation V35 — Khắc phục mép thư
 
+## Chỉnh ảnh trong Admin
+
+- Vào **Ảnh kỷ niệm**, chọn JPG/PNG/WebP tối đa 15 MB hoặc bấm **Chỉnh sửa ảnh hiện tại**.
+- Kéo ảnh trong khung vòm, phóng to, xoay/lật, chỉnh sáng và tương phản. Phím mũi tên cũng điều chỉnh được vị trí ảnh.
+- Bấm **Áp dụng ảnh**, sau đó **Lưu thiệp & lấy link riêng** hoặc **Lưu cấu hình chung**. Ảnh được xuất thành JPG 800 × 1000 trước khi tải lên.
+- Mỗi ảnh đã lưu có mã riêng; đổi ảnh cho một thiệp không thay ảnh của các thiệp khác. **Dùng ảnh mặc định** chỉ thay lựa chọn của bản đang chỉnh.
+- Khi triển khai, cập nhật cả `site/` và `netlify/functions/`, bao gồm `photo-editor.js`, `assets/graduate-default.jpg` và Function `photo.mjs`. Dùng mật khẩu quản trị hiện có.
+
+Kiểm tra ảnh và API bằng `node --experimental-vm-modules --test tests/photo.test.mjs`. Bộ kiểm tra dùng kho dữ liệu tạm trong bộ nhớ, không ghi lên Netlify.
+
 - Xóa đường vàng ngang do pseudo-element được thêm trong V31–V32.
 - Dùng chung tọa độ đường cắt giữa nắp và thân phong bì, tránh hở mép hai bên.
 - Nắp vẫn lật trên bản lề ở mép trên, huy hiệu được nhấc trước.

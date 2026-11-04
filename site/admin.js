@@ -1,3 +1,5 @@
+import { createPhotoEditor } from './photo-editor.js?v=20261104-preview-2';
+
 (()=>{
 'use strict';
 const $=id=>document.getElementById(id);
@@ -39,6 +41,7 @@ async function api(path,options={}){
  return result;
 }
 function collect(){
+ photoEditor.assertReady();
  const data={...baseCfg};for(const k of fields)if(input(k))data[k]=input(k).value.trim();
  if(data.recipientRole==='custom' && !data.recipientSalutation)throw Error('Hãy nhập lời mời tùy chỉnh trước khi lưu.');
  if(data.recipientRole!=='custom')data.recipientSalutation='';
@@ -46,6 +49,12 @@ function collect(){
  if(data.musicSource==='uploaded' && !musicVersion && !musicAsset)throw Error('Hãy tải lên MP3 trước khi chọn nguồn nhạc này.');
  return data;
 }
+const photoEditor=createPhotoEditor({upload:async blob=>{
+ if(!pwd())throw Error('Nhập mật khẩu quản trị trước khi lưu ảnh.');
+ const result=await api('photo',{method:'POST',headers:{'Content-Type':'image/jpeg'},body:blob});
+ return result.photoAsset;
+}});
+async function withPhoto(data){data.photoAsset=await photoEditor.ensureUploaded();return data;}
 function showMusic(){
  const source=input('musicSource').value;
  $('uploadPanel').classList.toggle('hidden',source!=='uploaded');$('urlPanel').classList.toggle('hidden',source!=='url');
@@ -56,6 +65,7 @@ function showMusic(){
  audio.volume=Number($('musicVolume').value)/100;audio.load();
 }
 function populate(config){
+ photoEditor.setAsset(config.photoAsset||'');
  for(const k of fields)if(input(k))input(k).value=config[k]??'';
  input('musicSource').value=config.musicSource||'default';
  $('musicVolume').value=Math.round((config.musicVolume??.22)*100);
@@ -76,6 +86,7 @@ async function save(){
  let data;try{data=collect();}catch(e){status(e.message,'bad');return;}
  $('saveBtn').disabled=true;status(editingId?'Đang cập nhật link hiện có...':'Đang lưu thiệp riêng và tạo đường link...');
  try{
+  await withPhoto(data);
   const response=await api('invites',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:editingId||undefined,settings:data})});
   editingId=response.invite.id;displayLink(editingId);$('editBanner').textContent='Đang chỉnh sửa thiệp của '+response.invite.settings.recipientName+'. Lưu lại sẽ giữ nguyên link này.';
   $('saveBtn').textContent='Lưu thay đổi cho link này';
@@ -88,6 +99,7 @@ async function saveGlobal(){
  $('saveGlobalBtn').disabled=true;
  try{
   const config=collect();config.recipientName='';config.recipientRole='';config.recipientSalutation='';
+  await withPhoto(config);
   const res=await api('config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(config)});
   baseCfg=res.settings;status('Đã lưu cấu hình chung cho trang chủ. Các thiệp cá nhân đã lưu không thay đổi.','good');
  }catch(e){status(e.message,'bad');}finally{$('saveGlobalBtn').disabled=false;}
@@ -147,6 +159,7 @@ async function createLinks(){
  $('createLinks').disabled=true;links=[];let failed=[];
  const box=$('links');box.replaceChildren();
  try{
+  await withPhoto(base);
   for(let i=0;i<names.length;i++){
    const name=names[i];
    try{

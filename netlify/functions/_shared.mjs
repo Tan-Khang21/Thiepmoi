@@ -8,12 +8,13 @@ export const DEFAULTS = {
   address:'140 Lê Trọng Tấn, Phường Tây Thạnh, TP. Hồ Chí Minh',
   mapQuery:'Trường Đại học Công Thương TP. Hồ Chí Minh, 140 Lê Trọng Tấn, Phường Tây Thạnh, TP. Hồ Chí Minh',
   recipientName:'', recipientRole:'', recipientSalutation:'', musicVolume:0.22, musicEnabled:true,
-  musicSource:'default', musicUrl:'', musicVersion:'', musicAsset:''
+  musicSource:'default', musicUrl:'', musicVersion:'', musicAsset:'', photoAsset:''
 };
 export const JSON_HEADERS={ 'Content-Type':'application/json; charset=utf-8', 'Cache-Control':'no-store', 'X-Content-Type-Options':'nosniff' };
 export const send=(data,status=200)=>new Response(JSON.stringify(data),{status,headers:JSON_HEADERS});
 export const dataStore=()=>getStore('huit-invitation-settings');
 export const audioStore=()=>getStore('huit-invitation-audio');
+export const photoStore=()=>getStore('huit-invitation-photos');
 export const getSettings=async()=>({ ...DEFAULTS, ...(await dataStore().get('settings',{type:'json',consistency:'strong'}) || {}) });
 export function authorized(request){
   const expected=process.env.HUIT_ADMIN_PASSWORD||'';
@@ -48,6 +49,11 @@ export function sanitize(input,current=DEFAULTS){
     const asset=String(input.musicAsset||'');
     if(asset && !/^[a-f0-9]{32}$/.test(asset)) throw Error('Mã nhạc không hợp lệ.');
     result.musicAsset=asset;
+  }
+  if('photoAsset' in input){
+    const asset=String(input.photoAsset||'');
+    if(asset && !/^[a-f0-9]{32}$/.test(asset))throw Error('Mã ảnh không hợp lệ.');
+    result.photoAsset=asset;
   }
   return result;
 }
