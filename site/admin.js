@@ -1,5 +1,4 @@
-import { createPhotoEditor } from './photo-editor.js?v=20261104-preview-2';
-
+// Inlined with photo-editor.js by scripts/build-admin.mjs; edit this source, then run npm run build.
 (()=>{
 'use strict';
 const $=id=>document.getElementById(id);
@@ -73,7 +72,10 @@ function populate(config){
  musicVersion=config.musicVersion||'';musicAsset=config.musicAsset||'';
  showMusic();updateRecipientPreview();
 }
-async function load(){try{const data=await api('config');baseCfg=data.settings;populate(baseCfg);status(data.ready?'Đã tải cấu hình. Nhập mật khẩu, tên khách và bấm Lưu thiệp.':'Đặt HUIT_ADMIN_PASSWORD trong Netlify trước khi lưu.',data.ready?'good':'bad');}catch(e){status(e.message,'bad');}}
+async function load(){
+ if(location.protocol==='file:'){status('Bạn đang mở bản HTML trên máy. Có thể chọn và chỉnh ảnh tại đây; hãy mở Admin trên website để lưu thiệp.');return;}
+ try{const data=await api('config');baseCfg=data.settings;populate(baseCfg);status(data.ready?'Đã tải cấu hình. Nhập mật khẩu, tên khách và bấm Lưu thiệp.':'Đặt HUIT_ADMIN_PASSWORD trong Netlify trước khi lưu.',data.ready?'good':'bad');}catch(e){status(e.message,'bad');}
+}
 function linkFor(id){return new URL('/i/'+id,location.origin).href;}
 async function copy(text){try{await navigator.clipboard.writeText(text);status('Đã sao chép link.','good');}catch{window.prompt('Sao chép liên kết:',text);}}
 function displayLink(id){savedLink=linkFor(id);$('savedLink').textContent=savedLink;$('savedLink').href=savedLink;$('savedResult').classList.remove('hidden');}

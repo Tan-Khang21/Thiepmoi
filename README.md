@@ -2,6 +2,8 @@
 
 ## Chỉnh ảnh trong Admin
 
+Trang `site/admin.html` chứa sẵn mã chỉnh ảnh và ảnh mặc định, có thể mở trực tiếp trên máy để xem/chỉnh ảnh. Lưu thiệp vẫn cần website có Netlify Functions. Khi sửa `site/admin.js`, `site/photo-editor.js` hoặc ảnh mặc định, chạy `npm run build` để cập nhật HTML; Netlify cũng chạy lệnh này khi triển khai.
+
 - Vào **Ảnh kỷ niệm**, chọn JPG/PNG/WebP tối đa 15 MB hoặc bấm **Chỉnh sửa ảnh hiện tại**.
 - Kéo ảnh trong khung vòm, phóng to, xoay/lật, chỉnh sáng và tương phản. Phím mũi tên cũng điều chỉnh được vị trí ảnh.
 - Bấm **Áp dụng ảnh**, sau đó **Lưu thiệp & lấy link riêng** hoặc **Lưu cấu hình chung**. Ảnh được xuất thành JPG 800 × 1000 trước khi tải lên.

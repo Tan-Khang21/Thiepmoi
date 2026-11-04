@@ -14,10 +14,11 @@ export function createPhotoEditor({upload}){
  const $=id=>document.getElementById(id);
  const canvas=$('photoCanvas'),ctx=canvas.getContext('2d');
  const controls=$('photoControls'),editor=$('photoEditor'),preview=$('photoPreview');
+ const defaultPhoto=preview.getAttribute('src')||DEFAULT_PHOTO;
  let asset='',pending=null,pendingURL='',source=null,loading=false,applying=false,generation=0,pointer=null,uploadPromise=null,drawFrame=0;
  let state;
  const message=(text,error=false)=>{$('photoStatus').textContent=text;$('photoStatus').classList.toggle('error',error);};
- function currentURL(){return pendingURL||(asset?'/.netlify/functions/photo?asset='+asset:DEFAULT_PHOTO);}
+ function currentURL(){return pendingURL||(asset?'/.netlify/functions/photo?asset='+asset:defaultPhoto);}
  function clearSource(){
   cancelAnimationFrame(drawFrame);drawFrame=0;
   if(pointer&&canvas.hasPointerCapture(pointer.id))canvas.releasePointerCapture(pointer.id);
@@ -33,7 +34,7 @@ export function createPhotoEditor({upload}){
  }
  preview.addEventListener('load',()=>{preview.hidden=false;});
  preview.addEventListener('error',()=>{
-  if(preview.getAttribute('src')!==DEFAULT_PHOTO){preview.src=DEFAULT_PHOTO;message('Không tải được ảnh đã lưu. Hãy chọn ảnh khác hoặc dùng ảnh mặc định.',true);}
+  if(preview.getAttribute('src')!==defaultPhoto){preview.src=defaultPhoto;message('Không tải được ảnh đã lưu. Hãy chọn ảnh khác hoặc dùng ảnh mặc định.',true);}
   else{preview.hidden=true;message('Chưa tải được ảnh mặc định. Bạn vẫn có thể chọn ảnh mới để chỉnh sửa.',true);}
  });
  function reset(){

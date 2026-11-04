@@ -3,6 +3,10 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "scripts": {
+    "build": "node scripts/build-admin.mjs",
+    "test": "node --experimental-vm-modules --test tests/*.test.mjs"
+  },
   "dependencies": {
     "@netlify/blobs": "^11.1.7"
   }
