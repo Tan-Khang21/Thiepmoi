@@ -7,7 +7,7 @@ export const DEFAULTS = {
   venue:'Cơ sở chính HUIT (cập nhật theo địa điểm tổ chức)',
   address:'140 Lê Trọng Tấn, Phường Tây Thạnh, TP. Hồ Chí Minh',
   mapQuery:'Trường Đại học Công Thương TP. Hồ Chí Minh, 140 Lê Trọng Tấn, Phường Tây Thạnh, TP. Hồ Chí Minh',
-  recipientName:'', recipientRole:'', musicVolume:0.22, musicEnabled:true,
+  recipientName:'', recipientRole:'', recipientSalutation:'', musicVolume:0.22, musicEnabled:true,
   musicSource:'default', musicUrl:'', musicVersion:'', musicAsset:''
 };
 export const JSON_HEADERS={ 'Content-Type':'application/json; charset=utf-8', 'Cache-Control':'no-store', 'X-Content-Type-Options':'nosniff' };
@@ -25,7 +25,7 @@ export function authorized(request){
 export function sanitize(input,current=DEFAULTS){
   if(!input || typeof input!=='object' || Array.isArray(input))throw Error('Dữ liệu không hợp lệ.');
   const result={...current};
-  const rules={studentName:120,graduationYear:8,dateDisplay:160,venue:180,address:240,mapQuery:300,recipientName:120,recipientRole:50,musicUrl:600};
+  const rules={studentName:120,graduationYear:8,dateDisplay:160,venue:180,address:240,mapQuery:300,recipientName:120,recipientRole:50,recipientSalutation:120,musicUrl:600};
   for(const [key,max] of Object.entries(rules)){
     if(key in input){
       if(typeof input[key]!=='string')throw Error('Giá trị '+key+' không hợp lệ.');

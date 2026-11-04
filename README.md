@@ -1,38 +1,57 @@
-# HUIT Invitation – Cinematic 3D (V25)
+# HUIT Invitation V35 — Khắc phục mép thư
 
-Phiên bản này cập nhật trực tiếp từ **V24: Admin + Public + link riêng từng khách + nhạc MP3 tối đa 15 MB**. Không thay đổi cấu trúc dữ liệu, API hoặc Netlify Functions.
+- Xóa đường vàng ngang do pseudo-element được thêm trong V31–V32.
+- Dùng chung tọa độ đường cắt giữa nắp và thân phong bì, tránh hở mép hai bên.
+- Nắp vẫn lật trên bản lề ở mép trên, huy hiệu được nhấc trước.
+- Giữ nền công nghệ V34, cấu hình Netlify, Admin, link cá nhân hóa và nhạc.
 
-## Hiệu ứng mới
+## Deploy
+Chép nội dung dự án vào root repository GitHub đang kết nối Netlify; commit và push. Giữ nguyên biến `HUIT_ADMIN_PASSWORD`. Sau khi deploy xong, Ctrl+F5 để tránh cache CSS cũ.
 
-- **Phong bì 3D:** nghiêng nhẹ theo vị trí con trỏ trên desktop; ánh sáng và bóng đổ phản ứng theo góc nhìn.
-- **Mở phong bì theo trình tự:** dấu HUIT phát sáng → nắp thư lật 3D → ánh sáng xuất hiện từ bên trong → lá thư trượt lên.
-- **Camera tiến nhẹ về phía cổng HUIT:** phần mái, hai trụ và nét phối cảnh chuyển động với tốc độ/độ dịch chuyển khác nhau; tiêu đề dịu đi trong lúc lá thư bay lên, rồi hiện thiệp.
-- **Đóng thư:** khi đóng thiệp, lá thư thu về trước, nắp thư đóng sau, dấu niêm phong trở lại.
-- **Mobile & Accessibility:** giảm biên độ zoom trên điện thoại; không yêu cầu con trỏ; tôn trọng cài đặt `prefers-reduced-motion`.
 
-## Deploy lên website Netlify hiện tại
+## V38 — Huy hiệu đầy đủ và vị trí lá thư
+- Huy hiệu và hai đuôi ruy băng được tách thành một ảnh WebP trong suốt để bay cùng nhau.
+- Nắp, thân thư dùng ảnh bìa đã xử lý sạch huy hiệu/ruy băng in sẵn.
+- Hạ thư nhẹ so với V37 trên cả desktop và mobile.
+- Giữ nguyên Admin, Netlify Functions, nhạc và liên kết thiệp đã lưu.
+- Khi deploy, phải upload cả thư mục `site/assets`.
 
-1. Giải nén gói ZIP tại **thư mục gốc repository** GitHub đã kết nối Netlify; ghi đè các file cũ.
-2. Giữ nguyên **site Netlify**, biến môi trường `HUIT_ADMIN_PASSWORD`, các dữ liệu và link thiệp đã lưu.
-3. Commit và push lên GitHub. Netlify deploy tự động; đợi trạng thái **Published**.
-4. Mở lại trang Public và `/admin` (bấm Ctrl+F5 nếu trình duyệt đang lưu cache).
 
-**Không cần tạo lại link thiệp.** Các đường dẫn `/i/<mã-thiệp>` vẫn sử dụng Netlify Blobs hiện tại.
+V39 updates: lowered the envelope slightly and replaced the simple circular backdrop with a more dynamic tech-cinematic background (side hologram panels, scanline, grid overlay, comet streaks, and a softer halo).
 
-## Cách sử dụng
 
-- Trên trang Public, đưa chuột lên phong bì để thấy hiệu ứng nghiêng nhẹ; bấm vào phong bì để mở thiệp.
-- Khi mở, camera tiến nhẹ về cổng trường. Nội dung và nhạc riêng của mỗi khách vẫn được tải từ cấu hình đã lưu.
-- Bấm dấu **×** để đóng thiệp và xem phong bì khép lại.
-- Quản lý nội dung, nhạc, tạo / sửa / xóa link riêng ở `/admin` như bản V24.
+### Phiên bản V40 – Nền Ceremonial Aurora
+Đã bỏ các panel hologram, các vòng quỹ đạo lớn và lưới phủ kín. Nền mới dùng ánh sáng xanh HUIT như sân khấu tốt nghiệp, tia sáng mềm, đường phối cảnh cực mảnh, điểm vàng và hạt sáng. Hỗ trợ reduced-motion và giảm hiệu ứng ở màn hình nhỏ.
 
-## Các tập tin chính
 
-- `site/index.html`: trang Public và hiệu ứng mở thiệp.
-- `site/admin.html`, `site/admin.js`: quản trị thiệp.
-- `netlify/functions/`: lưu cấu hình, nhạc và link riêng.
-- `netlify.toml`, `package.json`: cấu hình Netlify.
+V41 — Neon campus theme using new assets: neon-side-elements.webp, neon-side-left.webp, neon-side-right.webp. Letter stacking fixed: opened flap behind rising letter, rising letter behind front pocket. Header label updated to THƯ MỜI LỄ TỐT NGHIỆP. Deploy site/ and netlify/ together.
 
-## Lưu ý
 
-Website Public có thể xem thử khi mở `site/index.html`, nhưng tính năng lưu dữ liệu, link riêng và nhạc online cần Netlify Functions/Blobs. Bản này được kiểm tra cú pháp JavaScript và luồng mở/đóng trên Chromium ở kích thước desktop và mobile trong môi trường thử nghiệm; bạn nên thử lại sau khi deploy để xác nhận cấu hình Netlify thực tế.
+## V42
+- An cac the cong nghe o hai ben, giu lai hinh kien truc truong phia duoi.
+- Chuyen phong bi sang trai mot chut (desktop/mobile).
+- Day 0/1 ro hon va mo dan, bien mat truoc khu vuc truong phia duoi.
+
+## V44 – Motion refinements
+- Restore invitation art layout; V43 accidentally changed the absolute circle element into flow and pushed portrait/logo down.
+- Subtle recurring random mini-fireworks inside the opened card (canvas, stopped on close, disabled by reduced-motion).
+- Animated blue and gold tracer beams in lower left/right background, with glowing glints moving along curves.
+- Keep the envelope left offset and same vertical position as V42.
+
+## V45 - Chuyển động sóng nhấp nhô
+- Thay các vệt sáng chạy dọc thành các lớp sóng nhấp nhô lên/xuống theo phương dọc (trái 5.8 giây, phải 6.7 giây), mỗi lớp lệch pha.
+- Tách lớp sóng dưới nền từ ảnh gốc để phần kiến trúc trường ở phía sau không chuyển động.
+- Các đường viền SVG phát sáng dao động dọc thay vì chạy ngang; bỏ các chấm chạy theo đường cong.
+- Giữ nguyên phong bì, pháo bông trong thiệp, Admin và Netlify Functions.
+
+Deploy Netlify: dùng nội dung bên trong ZIP ở thư mục gốc, giữ `netlify.toml`, `site/` và `netlify/functions/`.
+
+
+## V46 — Sóng lan từ trong ra
+- Sóng xanh lam/xanh ngọc/vàng được vẽ bằng Canvas, liên tục lan từ phía phong bì ra hai mép màn hình theo hàm sin biến thiên theo không gian và thời gian.
+- Bỏ chuyển động nhấp lên/xuống toàn bộ ảnh nền V45 và tắt các vệt laser nét đứt V44. Hình tòa nhà đứng yên; chỉ bề mặt sóng chuyển động.
+- Giới hạn tốc độ làm mới khoảng 40fps, tạm dừng khi trang ở nền, hỗ trợ chế độ giảm chuyển động.
+- Admin, hệ thống link mời và Netlify Functions giữ nguyên.
+
+
+V47: Smooth continuous full-width outward-traveling waves behind the envelope, no seam at center. Rebuilt the floating graduation cap using cleaner blue-cyan 3D SVG with a gold tassel. Admin and Netlify functions unchanged.

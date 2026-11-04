@@ -2,7 +2,7 @@
 'use strict';
 const $=id=>document.getElementById(id);
 const input=name=>document.querySelector(`[name="${name}"]`);
-const fields=['studentName','graduationYear','dateDisplay','venue','address','mapQuery','recipientName','recipientRole','musicSource','musicUrl'];
+const fields=['studentName','graduationYear','dateDisplay','venue','address','mapQuery','recipientName','recipientRole','recipientSalutation','musicSource','musicUrl'];
 let baseCfg={},musicVersion='',musicAsset='',editingId='',savedLink='',links=[],inviteRecords=[];
 function status(message,type=''){const el=$('status');el.className='status '+type;el.textContent=message;}
 function pwd(){return $('password').value;}
@@ -10,22 +10,24 @@ function pwd(){return $('password').value;}
 const normalizeGreeting=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/đ/g,'d').replace(/[^a-z ]/g,' ').replace(/\s+/g,' ').trim();
 const greetingOnly=new Set(['than moi','than moi ban','kinh moi','kinh moi ban','tran trong kinh moi','ban than moi','kinh moi anh chi','kinh moi thay co']);
 function badRecipient(name){return greetingOnly.has(normalizeGreeting(name));}
-function addressee(name,role){
+function addressee(name,role,customSalutation=''){
  let label='TRÂN TRỌNG KÍNH MỜI',display=name.trim();
- if(role==='Bạn'){label='THÂN MỜI BẠN';display=display.replace(/^Bạn\s+/i,'').trim();}
+ if(role==='custom')label=customSalutation.trim()||'Nhập lời mời riêng';
+ else if(role==='Bạn'){label='THÂN MỜI BẠN';display=display.replace(/^Bạn\s+/i,'').trim();}
  else if(role==='Anh/Chị'){label=/^(Anh|Chị)\s+/i.test(display)?'TRÂN TRỌNG KÍNH MỜI':'TRÂN TRỌNG KÍNH MỜI ANH/CHỊ';}
  else if(role==='Thầy/Cô'){label=/^(Thầy|Cô)\s+/i.test(display)?'TRÂN TRỌNG KÍNH MỜI':'TRÂN TRỌNG KÍNH MỜI THẦY/CÔ';}
  else if(role==='Gia đình'){label=/^Gia\s*đình\s+/i.test(display)?'TRÂN TRỌNG KÍNH MỜI':'TRÂN TRỌNG KÍNH MỜI GIA ĐÌNH';}
  return {label,display};
 }
 function updateRecipientPreview(){
- const name=input('recipientName').value.trim(),role=input('recipientRole').value;
+ const name=input('recipientName').value.trim(),role=input('recipientRole').value,customSalutation=input('recipientSalutation').value;
  const preview=$('recipientPreviewSalutation'),guest=$('recipientPreviewName'),note=$('recipientPreviewNote'),box=preview.closest('.invite-preview');
  const invalid=badRecipient(name);
- const r=addressee(invalid?'':name,role);
+ const r=addressee(invalid?'':name,role,customSalutation);
  preview.textContent=r.label; guest.textContent=invalid?'Cần nhập tên người nhận':(r.display||'Tên người nhận');
  note.textContent=invalid?'Bạn đang nhập lời chào vào ô tên. Hãy nhập tên khách, ví dụ: Nguyễn Văn A.':name?'Đây là cách nội dung sẽ xuất hiện trên thiệp.':'Nhập tên và chọn xưng hô để xem trước.';
  box.classList.toggle('error',invalid);
+ $('customSalutationPanel').classList.toggle('hidden',role!=='custom');
 }
 
 async function api(path,options={}){
@@ -38,6 +40,8 @@ async function api(path,options={}){
 }
 function collect(){
  const data={...baseCfg};for(const k of fields)if(input(k))data[k]=input(k).value.trim();
+ if(data.recipientRole==='custom' && !data.recipientSalutation)throw Error('Hãy nhập lời mời tùy chỉnh trước khi lưu.');
+ if(data.recipientRole!=='custom')data.recipientSalutation='';
  data.musicVolume=Number($('musicVolume').value)/100;data.musicVersion=musicVersion;data.musicAsset=musicAsset;
  if(data.musicSource==='uploaded' && !musicVersion && !musicAsset)throw Error('Hãy tải lên MP3 trước khi chọn nguồn nhạc này.');
  return data;
@@ -83,7 +87,7 @@ async function saveGlobal(){
  if(!pwd()){status('Hãy nhập mật khẩu quản trị.','bad');return;}
  $('saveGlobalBtn').disabled=true;
  try{
-  const config=collect();config.recipientName='';config.recipientRole='';
+  const config=collect();config.recipientName='';config.recipientRole='';config.recipientSalutation='';
   const res=await api('config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(config)});
   baseCfg=res.settings;status('Đã lưu cấu hình chung cho trang chủ. Các thiệp cá nhân đã lưu không thay đổi.','good');
  }catch(e){status(e.message,'bad');}finally{$('saveGlobalBtn').disabled=false;}
@@ -159,6 +163,7 @@ async function createLinks(){
 }
 input('recipientName').addEventListener('input',updateRecipientPreview);
 input('recipientRole').addEventListener('change',updateRecipientPreview);
+input('recipientSalutation').addEventListener('input',updateRecipientPreview);
 $('saveBtn').addEventListener('click',save);
 $('saveGlobalBtn').addEventListener('click',saveGlobal);
 $('newInviteBtn').addEventListener('click',startFresh);
